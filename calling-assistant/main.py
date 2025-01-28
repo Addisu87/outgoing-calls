@@ -6,11 +6,11 @@ import uvicorn
 from calling_assistant.helpers.agent_helpers import make_call
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi.response import JSONResponse
+from fastapi.responses import JSONResponse
 
 load_dotenv()
 
-PORT = int(os.getenv("PORT", 6060))
+PORT = int(os.getenv("PORT", "6060"), 10)
 
 
 app = FastAPI()

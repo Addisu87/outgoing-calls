@@ -1,10 +1,16 @@
-import websockets
 import os
 import json
-import websocket
-import re
 import base64
 import asyncio
+import argparse
+from fastapi import FastAPI, WebSocket, BackgroundTasks
+from fastapi.responses import JSONResponse
+from fastapi.websockets import WebSocketDisconnect
+from twilio.rest import Client
+import websockets
+from dotenv import load_dotenv
+import uvicorn
+import re
 
 
 from fastapi.response import JSONResponse
@@ -14,7 +20,7 @@ from fastapi.websockets import WebSocketDisconnect
 from twilio.rest import Client
 
 from calling-assistant.prompt.agent_prompt import LOG_EVENT_TYPES
-from calling-assistant.helpers.agent_helpers import initialize_session
+from calling_assistant.helpers.agent_helpers import initialize_session
 
 router = APIRouter()
 
@@ -38,7 +44,7 @@ async def handle_media_stream(websocket: WebSocket):
             "OpenAI-Beta": "realtime=v1"
         }
     ) as openai_ws:
-            await initialize_session(openai_ws)
+            await initialize_session(openai_ws())
             stream_sid = None
             
             async def receive_from_twilio():

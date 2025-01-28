@@ -10,9 +10,8 @@ TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 PHONE_NUMBER_FROM = os.getenv("PHONE_NUMBER_FROM")
 raw_domain = os.getenv("DOMAIN", "")
-DOMAIN = re.sub(
-    r"(^\w+:|^)\/\/|\/+$", "", raw_domain
-)  # Strip protocols and trailing slashes from DOMAIN
+# Strip protocols and trailing slashes from DOMAIN
+DOMAIN = re.sub(r"(^\w+:|^)\/\/|\/+$", "", raw_domain)
 voice_id = os.getenv("VOICE_ID")
 
 if not (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and PHONE_NUMBER_FROM):
