@@ -2,6 +2,14 @@
 
 To Make Outgoing Calls with Twilio Voice, the OpenAI Realtime API, and Python
 
+## Prerequire
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Run and test your code
 
 ### Step 1: Launch ngrok
