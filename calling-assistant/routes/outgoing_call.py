@@ -2,22 +2,11 @@ import os
 import json
 import base64
 import asyncio
-import argparse
-from fastapi import FastAPI, WebSocket, BackgroundTasks
+import websockets
+
+from fastapi import APIRouter, WebSocket, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.websockets import WebSocketDisconnect
-from twilio.rest import Client
-import websockets
-from dotenv import load_dotenv
-import uvicorn
-import re
-
-
-from fastapi.response import JSONResponse
-from fastapi import APIRouter, WebSocket, BackgroundTasks, HTTPException
-from fastapi.response import JSONResponse
-from fastapi.websockets import WebSocketDisconnect
-from twilio.rest import Client
 
 from calling-assistant.prompt.agent_prompt import LOG_EVENT_TYPES
 from calling_assistant.helpers.agent_helpers import initialize_session
@@ -27,15 +16,12 @@ router = APIRouter()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-
-
 @router.websocket("/media-stream")
 async def handle_media_stream(websocket: WebSocket):
     """Handle WebSocket connections between Twilio and OpenAI."""
     print("Client connected")
     await websocket.accept()
     
-
 
     async with websockets.connect(
         "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17",
@@ -99,7 +85,3 @@ async def handle_media_stream(websocket: WebSocket):
                     raise HTTPException(status_code=500, detail=str(e))
             await asyncio.gather(receive_from_twilio(), send_to_twilio())
                                 
-                    
-                                
-                                
-            
