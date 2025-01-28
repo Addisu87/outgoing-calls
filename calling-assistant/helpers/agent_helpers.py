@@ -74,7 +74,7 @@ async def check_number_allowed(to):
     """Check if a number is allowed to be called."""
     try:
         # Uncomment these line to text numbers. Only add numbers you have permission to call.
-        # OVERRIDE_PHONE_NUMBERS = ["+180055551212"]
+        # OVERRIDE_PHONE_NUMBERS = ["+180055551212","+15677066276"]
         # if to in OVERRIDE_PHONE_NUMBERS:
         #    return True
 
@@ -90,3 +90,38 @@ async def check_number_allowed(to):
     except Exception as e:
         print(f"Error checking phone number: {e}")
         return False
+
+
+# Create the outbound call function and a Call SID logger
+async def make_call(phone_number_to_call: str):
+    """Make an outbound call."""
+    if not phone_number_to_call:
+        raise ValueError("Please provide a phone number to call.")
+
+    is_allowed = await check_number_allowed(phone_number_to_call)
+    if not is_allowed:
+        raise ValueError(
+            f"The number {phone_number_to_call} is not recognized as a valid outgoing number or caller ID."
+        )
+
+    # Ensure compliance with applicable laws and regulations
+    # All of the rules of TCPA apply even if a call is made by AI.
+    # Do your own diligence for compliance.
+
+    outbound_twiml = (
+        f"<?xml version='1.0' encoding='UTF-8'?>"
+        f"<Response><Connect><Stream url='wss://{DOMAIN}/media-stream' /></Connect></Response>"
+    )
+
+    call = client.calls.create(
+        twiml=outbound_twiml,
+        from_=PHONE_NUMBER_FROM,
+        to=phone_number_to_call,
+    )
+
+    await log_call_sid(call.sid)
+
+
+async def log_call_sid(call_sid):
+    """Log the Call SID."""
+    print(f"Call  started with SID: {call_sid}")
